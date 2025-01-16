@@ -114,7 +114,6 @@
     { element: document.querySelector('.barista'), speed: 1.5 }
   ];
 
-  // Control Charlene's movement
   let leftPosition = 50;
   document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft' && leftPosition > 0) {
@@ -126,25 +125,21 @@
     }
   });
 
-  // Game loop
   function gameLoop() {
     gameElements.forEach(item => {
       let currentTop = parseInt(item.element.style.top) || 0;
       item.element.style.top = `${currentTop + item.speed}px`;
 
-      // Reset the elements once they go off-screen
       if (currentTop > window.innerHeight) {
         item.element.style.top = `-${Math.floor(Math.random() * 500)}px`;
         item.element.style.left = `${Math.floor(Math.random() * 100)}%`;
-        
-        // Increase score for coffee cups
+
         if (item.element.classList.contains('coffee-cup')) {
           score += 10;
           scoreBoard.innerText = `Score: ${score}`;
         }
       }
 
-      // Collision detection
       if (currentTop + 30 > window.innerHeight - 50 &&
         leftPosition * (window.innerWidth / 100) + 25 > parseInt(item.element.style.left) &&
         leftPosition * (window.innerWidth / 100) - 25 < parseInt(item.element.style.left) + 30) {
@@ -157,7 +152,6 @@
       }
     });
 
-    // Check if player reached the goal
     if (score >= 100) {
       reward.style.display = 'block';
     }
@@ -165,15 +159,12 @@
     requestAnimationFrame(gameLoop);
   }
 
-  // Game Over function
   function gameOver() {
     alert("Game Over! You didn't survive the coffee run!");
-    location.reload(); // Restart the game
+    location.reload();
   }
 
-  // Start the game
   gameLoop();
-
 </script>
 
 </body>
