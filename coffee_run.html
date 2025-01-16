@@ -107,11 +107,11 @@
   let gameContainer = document.querySelector('.game-container');
 
   let gameElements = [
-    { element: document.querySelector('.coffee-cup:nth-of-type(1)'), speed: 2 },
-    { element: document.querySelector('.coffee-cup:nth-of-type(2)'), speed: 3 },
-    { element: document.querySelector('.laptop'), speed: 4 },
-    { element: document.querySelector('.spill'), speed: 1 },
-    { element: document.querySelector('.barista'), speed: 1.5 }
+    { element: document.querySelector('.coffee-cup:nth-of-type(1)'), speed: 2, type: 'coffee' },
+    { element: document.querySelector('.coffee-cup:nth-of-type(2)'), speed: 3, type: 'coffee' },
+    { element: document.querySelector('.laptop'), speed: 4, type: 'obstacle' },
+    { element: document.querySelector('.spill'), speed: 1, type: 'obstacle' },
+    { element: document.querySelector('.barista'), speed: 1.5, type: 'obstacle' }
   ];
 
   let leftPosition = 50;
@@ -130,22 +130,25 @@
       let currentTop = parseInt(item.element.style.top) || 0;
       item.element.style.top = `${currentTop + item.speed}px`;
 
+      // Reposition element when it falls off screen
       if (currentTop > window.innerHeight) {
         item.element.style.top = `-${Math.floor(Math.random() * 500)}px`;
         item.element.style.left = `${Math.floor(Math.random() * 100)}%`;
 
-        if (item.element.classList.contains('coffee-cup')) {
+        if (item.type === 'coffee') {
           score += 10;
           scoreBoard.innerText = `Score: ${score}`;
         }
       }
 
+      // Collision detection: Check if Charlene is near the falling item
       if (currentTop + 30 > window.innerHeight - 50 &&
         leftPosition * (window.innerWidth / 100) + 25 > parseInt(item.element.style.left) &&
         leftPosition * (window.innerWidth / 100) - 25 < parseInt(item.element.style.left) + 30) {
-        if (item.element.classList.contains('coffee-cup')) {
+        if (item.type === 'coffee') {
           score += 10;
           scoreBoard.innerText = `Score: ${score}`;
+          item.element.style.top = `-${Math.floor(Math.random() * 500)}px`; // Reset coffee cup position
         } else {
           gameOver();
         }
