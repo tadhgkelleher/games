@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Games Hub</title>
-  
-  <!-- Firebase SDKs (use the same Firebase setup as before) -->
+
   <script type="module">
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     const auth = getAuth();
@@ -22,19 +21,23 @@
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #111;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #1d1d1d, #222);
       color: white;
       margin: 0;
       padding: 0;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     header {
-      background-color: #222;
-      padding: 20px;
+      background-image: url('https://via.placeholder.com/1200x400/111/000?text=Welcome+to+Games+Hub');
+      background-size: cover;
+      background-position: center;
+      padding: 100px 20px;
       text-align: center;
-      font-size: 2rem;
+      font-size: 2.5rem;
+      color: #fff;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
     }
 
     .game-container {
@@ -46,34 +49,45 @@
 
     .game-card {
       background-color: #333;
-      border-radius: 10px;
-      margin: 15px;
-      width: 200px;
+      border-radius: 15px;
+      margin: 20px;
+      width: 220px;
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
     }
 
     .game-card:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
+      transform: scale(1.05);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
+      opacity: 1;
     }
 
     .game-card img {
       width: 100%;
-      border-radius: 10px 10px 0 0;
+      height: 150px;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .game-card:hover img {
+      transform: scale(1.1);
     }
 
     .game-card h3 {
-      font-size: 1.5rem;
-      margin: 10px 0;
+      font-size: 1.8rem;
+      margin: 15px 0;
+      color: #fff;
+      text-transform: uppercase;
     }
 
     .game-card p {
-      font-size: 1rem;
-      padding: 0 10px;
-      color: #bbb;
+      font-size: 1.1rem;
+      padding: 0 15px;
+      color: #ccc;
     }
 
     .sign-out {
@@ -81,10 +95,13 @@
       top: 20px;
       right: 20px;
       background-color: #ff6347;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 12px 25px;
+      font-size: 1.1rem;
+      color: white;
+      border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
     }
 
     .sign-out:hover {
@@ -96,9 +113,20 @@
       bottom: 0;
       width: 100%;
       text-align: center;
-      background-color: #222;
-      padding: 10px;
+      background-color: #111;
+      padding: 15px;
       color: #bbb;
+      font-size: 1rem;
+    }
+
+    footer a {
+      color: #ff6347;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #ff4500;
     }
   </style>
 </head>
@@ -108,44 +136,38 @@
   </header>
 
   <div class="game-container">
-    <!-- Sample Game 1: Galactic Explorer -->
     <div class="game-card" onclick="window.location.href='galactic_explorer.html'">
-      <img src="https://via.placeholder.com/200x150" alt="Galactic Explorer">
+      <img src="https://via.placeholder.com/220x150/111/fff?text=Galactic+Explorer" alt="Galactic Explorer">
       <h3>Galactic Explorer</h3>
       <p>Travel through different galaxies, discover new planets, and complete missions to collect rare items.</p>
     </div>
 
-    <!-- Sample Game 2: Dream Builder -->
     <div class="game-card" onclick="window.location.href='dream_builder.html'">
-      <img src="https://via.placeholder.com/200x150" alt="Dream Builder">
+      <img src="https://via.placeholder.com/220x150/111/fff?text=Dream+Builder" alt="Dream Builder">
       <h3>Dream Builder</h3>
       <p>Create your dream world by building structures, creating weather systems, and managing resources.</p>
     </div>
 
-    <!-- Sample Game 3: Ninja Drift -->
     <div class="game-card" onclick="window.location.href='ninja_drift.html'">
-      <img src="https://via.placeholder.com/200x150" alt="Ninja Drift">
+      <img src="https://via.placeholder.com/220x150/111/fff?text=Ninja+Drift" alt="Ninja Drift">
       <h3>Ninja Drift</h3>
       <p>Race through obstacle courses as a stealthy ninja, using your parkour and drifting skills to finish first!</p>
     </div>
 
-    <!-- Sample Game 4: Time Bender -->
     <div class="game-card" onclick="window.location.href='time_bender.html'">
-      <img src="https://via.placeholder.com/200x150" alt="Time Bender">
+      <img src="https://via.placeholder.com/220x150/111/fff?text=Time+Bender" alt="Time Bender">
       <h3>Time Bender</h3>
       <p>Manipulate time itself to solve puzzles and escape dangerous situations in this thrilling adventure game.</p>
     </div>
 
-    <!-- Sample Game 5: Horror Mansion -->
     <div class="game-card" onclick="window.location.href='horror_mansion.html'">
-      <img src="https://via.placeholder.com/200x150" alt="Horror Mansion">
+      <img src="https://via.placeholder.com/220x150/111/fff?text=Horror+Mansion" alt="Horror Mansion">
       <h3>Horror Mansion</h3>
       <p>Venture through an abandoned mansion filled with eerie creatures and supernatural phenomena. Solve the mysteries, if you dare.</p>
     </div>
 
-    <!-- Sample Game 6: VR Treasure Hunt -->
     <div class="game-card" onclick="window.location.href='vr_treasure_hunt.html'">
-      <img src="https://via.placeholder.com/200x150" alt="VR Treasure Hunt">
+      <img src="https://via.placeholder.com/220x150/111/fff?text=VR+Treasure+Hunt" alt="VR Treasure Hunt">
       <h3>VR Treasure Hunt</h3>
       <p>Put on your VR headset and go on an exciting treasure hunt across virtual worlds. Find hidden treasures and escape traps!</p>
     </div>
@@ -154,7 +176,7 @@
   <button class="sign-out" onclick="signOutUser()">Sign Out</button>
 
   <footer>
-    <p>&copy; 2025 My Mandala Games. All Rights Reserved.</p>
+    <p>&copy; 2025 My Mandala Games. All Rights Reserved. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
   </footer>
 
 </body>
