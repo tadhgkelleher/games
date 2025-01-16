@@ -3,174 +3,405 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Coffee Run Game</title>
+  <title>The Epic Coffee Run Adventure</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      background-color: #f0f0f0;
-      font-family: 'Arial', sans-serif;
+      background-color: #2c3e50;
+      font-family: 'Press Start 2P', cursive;
+      color: #ecf0f1;
     }
 
     .game-container {
       position: relative;
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(to top, #8b4513, #f4a261);
+      background: linear-gradient(to bottom, #2c3e50 0%, #3498db 100%);
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    }
+
+    .office-background {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 30vh;
+      background: repeating-linear-gradient(
+        90deg,
+        #34495e,
+        #34495e 100px,
+        #2c3e50 100px,
+        #2c3e50 200px
+      );
     }
 
     .charlene {
       position: absolute;
       bottom: 50px;
-      width: 50px;
-      height: 50px;
-      background-color: #ff6347;
+      width: 60px;
+      height: 60px;
+      background-color: #e74c3c;
       border-radius: 50%;
       left: 50%;
       transform: translateX(-50%);
-      transition: left 0.1s;
+      transition: left 0.1s ease;
+      z-index: 100;
     }
 
-    .coffee-cup, .laptop, .spill, .barista {
+    .charlene::before {
+      content: '🏃‍♀️';
+      font-size: 40px;
       position: absolute;
-      width: 30px;
-      height: 30px;
-      background-size: cover;
-      transition: top 0.1s;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
-    .coffee-cup {
-      background-image: url('https://via.placeholder.com/30x30?text=☕');
-    }
-
-    .spill {
-      background-image: url('https://via.placeholder.com/30x30?text=💧');
-    }
-
-    .laptop {
-      background-image: url('https://via.placeholder.com/30x30?text=💻');
-    }
-
-    .barista {
-      background-image: url('https://via.placeholder.com/30x30?text=👨‍🍳');
+    .game-object {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      font-size: 30px;
+      text-align: center;
+      line-height: 40px;
+      transition: top 0.1s ease;
     }
 
     .score-board {
       position: absolute;
       top: 20px;
-      font-size: 20px;
-      color: white;
+      left: 20px;
+      font-size: 16px;
+      color: #ffd700;
       z-index: 10;
-      padding: 5px 10px;
-      background-color: rgba(0, 0, 0, 0.6);
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.8);
       border-radius: 10px;
+      border: 2px solid #ffd700;
     }
 
-    .reward {
+    .power-meter {
       position: absolute;
-      top: 80%;
+      top: 80px;
+      left: 20px;
+      width: 200px;
+      height: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border: 2px solid #2ecc71;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .power-fill {
+      width: 100%;
+      height: 100%;
+      background-color: #2ecc71;
+      transition: width 0.3s ease;
+    }
+
+    .message-board {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       font-size: 24px;
-      color: #ff5722;
-      background-color: rgba(255, 255, 255, 0.8);
+      color: #ffd700;
+      background-color: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      display: none;
+      z-index: 1000;
+    }
+
+    .start-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .start-screen h1 {
+      color: #ffd700;
+      margin-bottom: 30px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .start-button {
+      padding: 15px 30px;
+      font-size: 20px;
+      background-color: #2ecc71;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+      transition: transform 0.2s ease;
+    }
+
+    .start-button:hover {
+      transform: scale(1.1);
+    }
+
+    .achievement {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #ffd700;
       padding: 10px;
       border-radius: 10px;
-      display: none;
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
     }
   </style>
 </head>
 <body>
-
-<div class="game-container">
-  <div class="score-board">
-    <span id="score">Score: 0</span>
+  <div class="game-container">
+    <div class="office-background"></div>
+    <div class="score-board">
+      <div>Score: <span id="score">0</span></div>
+      <div>High Score: <span id="highScore">0</span></div>
+    </div>
+    <div class="power-meter">
+      <div class="power-fill" id="powerFill"></div>
+    </div>
+    <div class="charlene" id="charlene"></div>
+    <div class="message-board" id="messageBoard"></div>
+    <div class="achievement" id="achievement"></div>
+    <div class="start-screen" id="startScreen">
+      <h1>The Epic Coffee Run<br>Adventure</h1>
+      <button class="start-button" id="startButton">Start Game</button>
+    </div>
   </div>
-  <div class="charlene" id="charlene"></div>
-  <div class="reward" id="reward">Congratulations! You earned Buffalo Wings!</div>
 
-  <div class="coffee-cup" style="top: -50px; left: 100px;"></div>
-  <div class="coffee-cup" style="top: -200px; left: 250px;"></div>
-  <div class="laptop" style="top: -300px; left: 400px;"></div>
-  <div class="spill" style="top: -500px; left: 150px;"></div>
-  <div class="barista" style="top: -700px; left: 50px;"></div>
-</div>
+  <script>
+    const gameState = {
+      score: 0,
+      highScore: localStorage.getItem('highScore') || 0,
+      power: 100,
+      gameStarted: false,
+      paused: false,
+      achievements: new Set()
+    };
 
-<script>
-  let score = 0;
-  let charlene = document.getElementById('charlene');
-  let scoreBoard = document.getElementById('score');
-  let reward = document.getElementById('reward');
-  let gameContainer = document.querySelector('.game-container');
+    const GAME_OBJECTS = [
+      { emoji: '☕', type: 'coffee', points: 10, speed: 3, message: "Hot coffee acquired!" },
+      { emoji: '🍩', type: 'bonus', points: 15, speed: 4, message: "Sugar rush!" },
+      { emoji: '📱', type: 'obstacle', points: -20, speed: 2, message: "Dropped your phone!" },
+      { emoji: '💼', type: 'obstacle', points: -15, speed: 3, message: "Briefcase collision!" },
+      { emoji: '👔', type: 'obstacle', points: -10, speed: 2.5, message: "Tie tangle!" }
+    ];
 
-  let gameElements = [
-    { element: document.querySelector('.coffee-cup:nth-of-type(1)'), speed: 2, type: 'coffee' },
-    { element: document.querySelector('.coffee-cup:nth-of-type(2)'), speed: 3, type: 'coffee' },
-    { element: document.querySelector('.laptop'), speed: 4, type: 'obstacle' },
-    { element: document.querySelector('.spill'), speed: 1, type: 'obstacle' },
-    { element: document.querySelector('.barista'), speed: 1.5, type: 'obstacle' }
-  ];
+    const FUNNY_MESSAGES = [
+      "Coffee is life! ☕",
+      "Running late... as usual! 🏃‍♀️",
+      "Need... more... caffeine! 💪",
+      "Watch out for the boss! 👔",
+      "Monday mornings be like... 😴"
+    ];
 
-  let leftPosition = 50;
-  let moveAmount = 10;
+    const elements = {
+      charlene: document.getElementById('charlene'),
+      scoreDisplay: document.getElementById('score'),
+      highScoreDisplay: document.getElementById('highScore'),
+      powerFill: document.getElementById('powerFill'),
+      messageBoard: document.getElementById('messageBoard'),
+      achievement: document.getElementById('achievement'),
+      startScreen: document.getElementById('startScreen'),
+      startButton: document.getElementById('startButton'),
+      gameContainer: document.querySelector('.game-container')
+    };
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft' && leftPosition > 0) {
-      leftPosition -= moveAmount;
-      charlene.style.left = `${leftPosition}%`;
-    } else if (event.key === 'ArrowRight' && leftPosition < 90) {
-      leftPosition += moveAmount;
-      charlene.style.left = `${leftPosition}%`;
+    function createGameObject() {
+      const gameObject = document.createElement('div');
+      const objectType = GAME_OBJECTS[Math.floor(Math.random() * GAME_OBJECTS.length)];
+      
+      gameObject.className = 'game-object';
+      gameObject.innerHTML = objectType.emoji;
+      gameObject.dataset.type = objectType.type;
+      gameObject.dataset.points = objectType.points;
+      gameObject.dataset.speed = objectType.speed;
+      gameObject.dataset.message = objectType.message;
+      
+      gameObject.style.left = `${Math.random() * (window.innerWidth - 40)}px`;
+      gameObject.style.top = '-50px';
+      
+      elements.gameContainer.appendChild(gameObject);
+      return gameObject;
     }
-  });
 
-  function gameLoop() {
-    gameElements.forEach(item => {
-      let currentTop = parseInt(item.element.style.top) || 0;
-      item.element.style.top = `${currentTop + item.speed}px`;
+    function showMessage(message, duration = 2000) {
+      elements.messageBoard.textContent = message;
+      elements.messageBoard.style.display = 'block';
+      setTimeout(() => {
+        elements.messageBoard.style.display = 'none';
+      }, duration);
+    }
 
-      // Reposition element when it falls off screen
-      if (currentTop > window.innerHeight) {
-        item.element.style.top = `-${Math.floor(Math.random() * 500)}px`;
-        item.element.style.left = `${Math.floor(Math.random() * 100)}%`;
+    function showAchievement(achievement) {
+      if (!gameState.achievements.has(achievement)) {
+        gameState.achievements.add(achievement);
+        elements.achievement.textContent = `Achievement: ${achievement}`;
+        elements.achievement.style.transform = 'translateX(0)';
+        setTimeout(() => {
+          elements.achievement.style.transform = 'translateX(120%)';
+        }, 3000);
+      }
+    }
 
-        // If it's a coffee cup, increase score
-        if (item.type === 'coffee') {
-          score += 10;
-          scoreBoard.innerText = `Score: ${score}`;
-        }
+    function updateScore(points) {
+      gameState.score += points;
+      elements.scoreDisplay.textContent = gameState.score;
+      
+      if (gameState.score > gameState.highScore) {
+        gameState.highScore = gameState.score;
+        elements.highScoreDisplay.textContent = gameState.highScore;
+        localStorage.setItem('highScore', gameState.highScore);
       }
 
-      // Collision detection: Check if Charlene is near the falling item
-      if (currentTop + 30 > window.innerHeight - 50 &&
-        leftPosition * (window.innerWidth / 100) + 25 > parseInt(item.element.style.left) &&
-        leftPosition * (window.innerWidth / 100) - 25 < parseInt(item.element.style.left) + 30) {
-        if (item.type === 'coffee') {
-          score += 10;
-          scoreBoard.innerText = `Score: ${score}`;
-          item.element.style.top = `-${Math.floor(Math.random() * 500)}px`; // Reset coffee cup position
-        } else {
-          gameOver();
+      // Achievements
+      if (gameState.score >= 100) showAchievement("Coffee Master");
+      if (gameState.score >= 200) showAchievement("Office Legend");
+      if (gameState.score >= 500) showAchievement("Caffeine Overdose");
+    }
+
+    function updatePower(amount) {
+      gameState.power = Math.max(0, Math.min(100, gameState.power + amount));
+      elements.powerFill.style.width = `${gameState.power}%`;
+      
+      if (gameState.power <= 0) {
+        gameOver();
+      }
+    }
+
+    function gameOver() {
+      gameState.gameStarted = false;
+      showMessage(`Game Over! Final Score: ${gameState.score}\n${FUNNY_MESSAGES[Math.floor(Math.random() * FUNNY_MESSAGES.length)]}`, 3000);
+      setTimeout(() => {
+        elements.startScreen.style.display = 'flex';
+      }, 3000);
+    }
+
+    function handleCollision(gameObject) {
+      const points = parseInt(gameObject.dataset.points);
+      const message = gameObject.dataset.message;
+      
+      updateScore(points);
+      showMessage(message);
+      
+      if (gameObject.dataset.type === 'coffee') {
+        updatePower(20);
+      } else if (gameObject.dataset.type === 'obstacle') {
+        updatePower(-30);
+      }
+      
+      gameObject.remove();
+    }
+
+    function moveGameObjects() {
+      if (!gameState.gameStarted || gameState.paused) return;
+
+      document.querySelectorAll('.game-object').forEach(object => {
+        const speed = parseFloat(object.dataset.speed);
+        const currentTop = parseFloat(object.style.top);
+        object.style.top = `${currentTop + speed}px`;
+
+        // Check for collision with Charlene
+        const charleneRect = elements.charlene.getBoundingClientRect();
+        const objectRect = object.getBoundingClientRect();
+
+        if (objectRect.top + objectRect.height > charleneRect.top &&
+            objectRect.left < charleneRect.right &&
+            objectRect.right > charleneRect.left) {
+          handleCollision(object);
         }
+
+        // Remove if off screen
+        if (currentTop > window.innerHeight) {
+          object.remove();
+        }
+      });
+
+      // Create new objects randomly
+      if (Math.random() < 0.02) {
+        createGameObject();
+      }
+
+      // Decrease power over time
+      updatePower(-0.1);
+
+      requestAnimationFrame(moveGameObjects);
+    }
+
+    function startGame() {
+      gameState.score = 0;
+      gameState.power = 100;
+      gameState.gameStarted = true;
+      elements.startScreen.style.display = 'none';
+      elements.scoreDisplay.textContent = '0';
+      elements.highScoreDisplay.textContent = gameState.highScore;
+      showMessage("Go Charlene, Go!", 2000);
+      moveGameObjects();
+    }
+
+    // Event Listeners
+    elements.startButton.addEventListener('click', startGame);
+
+    let leftPosition = 50;
+    document.addEventListener('keydown', (event) => {
+      if (!gameState.gameStarted) return;
+
+      const moveAmount = 5;
+      if (event.key === 'ArrowLeft' && leftPosition > 0) {
+        leftPosition -= moveAmount;
+        elements.charlene.style.left = `${leftPosition}%`;
+      } else if (event.key === 'ArrowRight' && leftPosition < 95) {
+        leftPosition += moveAmount;
+        elements.charlene.style.left = `${leftPosition}%`;
+      } else if (event.key === 'p') {
+        gameState.paused = !gameState.paused;
+        showMessage(gameState.paused ? "Paused" : "Resumed", 1000);
       }
     });
 
-    if (score >= 100) {
-      reward.style.display = 'block';
-    }
+    // Touch controls for mobile
+    let touchStartX = null;
+    document.addEventListener('touchstart', (event) => {
+      touchStartX = event.touches[0].clientX;
+    });
 
-    requestAnimationFrame(gameLoop);
-  }
+    document.addEventListener('touchmove', (event) => {
+      if (!gameState.gameStarted || !touchStartX) return;
 
-  function gameOver() {
-    alert("Game Over! You didn't survive the coffee run!");
-    location.reload();
-  }
+      const touchX = event.touches[0].clientX;
+      const diff = touchX - touchStartX;
+      const moveAmount = (diff / window.innerWidth) * 100;
+      
+      const newPosition = Math.max(0, Math.min(95, leftPosition + moveAmount));
+      elements.charlene.style.left = `${newPosition}%`;
+      leftPosition = newPosition;
+      touchStartX = touchX;
+    });
 
-  gameLoop();
-</script>
-
+    // Initialize high score display
+    elements.highScoreDisplay.textContent = gameState.highScore;
+  </script>
 </body>
 </html>
