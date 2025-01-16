@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Games Hub</title>
-
+  <title>Charlene's Creative Chaos</title>
+  
+  <!-- Firebase SDKs -->
   <script type="module">
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     const auth = getAuth();
@@ -21,73 +22,78 @@
 
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #1d1d1d, #222);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
       color: white;
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     header {
-      background-image: url('https://via.placeholder.com/1200x400/111/000?text=Welcome+to+Games+Hub');
-      background-size: cover;
-      background-position: center;
-      padding: 100px 20px;
+      background-color: #1e1e1e;
+      padding: 30px;
       text-align: center;
-      font-size: 2.5rem;
-      color: #fff;
-      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+      font-size: 3rem;
+      color: #ff6347;
+      text-transform: uppercase;
+      letter-spacing: 3px;
     }
 
     .game-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 30px;
+      margin-top: 40px;
+      gap: 30px;
     }
 
     .game-card {
       background-color: #333;
       border-radius: 15px;
-      margin: 20px;
       width: 220px;
       text-align: center;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
       cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      padding: 20px;
       overflow: hidden;
-      position: relative;
-      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .game-card:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
-      opacity: 1;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 1);
     }
 
     .game-card img {
       width: 100%;
       height: 150px;
       object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-
-    .game-card:hover img {
-      transform: scale(1.1);
+      border-radius: 10px;
+      margin-bottom: 15px;
     }
 
     .game-card h3 {
       font-size: 1.8rem;
-      margin: 15px 0;
-      color: #fff;
-      text-transform: uppercase;
+      margin: 10px 0;
+      color: #ff6347;
+      font-weight: bold;
     }
 
     .game-card p {
-      font-size: 1.1rem;
-      padding: 0 15px;
-      color: #ccc;
+      font-size: 1rem;
+      color: #bbb;
+      margin-bottom: 20px;
+    }
+
+    .reward {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ff6347;
+      margin-top: 15px;
     }
 
     .sign-out {
@@ -96,16 +102,15 @@
       right: 20px;
       background-color: #ff6347;
       padding: 12px 25px;
-      font-size: 1.1rem;
-      color: white;
       border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-size: 1.1rem;
     }
 
     .sign-out:hover {
       background-color: #ff4500;
+      transform: scale(1.1);
     }
 
     footer {
@@ -113,71 +118,112 @@
       bottom: 0;
       width: 100%;
       text-align: center;
-      background-color: #111;
+      background-color: #1e1e1e;
       padding: 15px;
       color: #bbb;
-      font-size: 1rem;
     }
 
-    footer a {
-      color: #ff6347;
-      text-decoration: none;
-      transition: color 0.3s;
+    footer p {
+      font-size: 1.1rem;
     }
 
-    footer a:hover {
-      color: #ff4500;
+    /* Responsive design for smaller screens */
+    @media (max-width: 768px) {
+      header {
+        font-size: 2rem;
+      }
+
+      .game-container {
+        gap: 15px;
+      }
+
+      .game-card {
+        width: 180px;
+        padding: 15px;
+      }
+
+      .sign-out {
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    Welcome to the Games Hub!
+    Welcome to Charlene's Creative Chaos!
   </header>
 
   <div class="game-container">
-    <div class="game-card" onclick="window.location.href='galactic_explorer.html'">
-      <img src="https://via.placeholder.com/220x150/111/fff?text=Galactic+Explorer" alt="Galactic Explorer">
-      <h3>Galactic Explorer</h3>
-      <p>Travel through different galaxies, discover new planets, and complete missions to collect rare items.</p>
+    <!-- Game 1: The Coffee Run -->
+    <div class="game-card" onclick="window.location.href='coffee_run.html'">
+      <img src="https://example.com/coffee_run.jpg" alt="The Coffee Run">
+      <h3>The Coffee Run</h3>
+      <p>Help Charlene survive her morning coffee run while avoiding spilled coffee, slow baristas, and misbehaving laptops! Reward: Buffalo Wings</p>
+      <p class="reward">Reward: Buffalo Wings</p>
     </div>
 
-    <div class="game-card" onclick="window.location.href='dream_builder.html'">
-      <img src="https://via.placeholder.com/220x150/111/fff?text=Dream+Builder" alt="Dream Builder">
-      <h3>Dream Builder</h3>
-      <p>Create your dream world by building structures, creating weather systems, and managing resources.</p>
+    <!-- Game 2: The Design Disaster -->
+    <div class="game-card" onclick="window.location.href='design_disaster.html'">
+      <img src="https://example.com/design_disaster.jpg" alt="The Design Disaster">
+      <h3>The Design Disaster</h3>
+      <p>Fix the disastrous layout Charlene’s client gave her while avoiding a meltdown! Reward: A Pint of Beer</p>
+      <p class="reward">Reward: A Pint of Beer</p>
     </div>
 
-    <div class="game-card" onclick="window.location.href='ninja_drift.html'">
-      <img src="https://via.placeholder.com/220x150/111/fff?text=Ninja+Drift" alt="Ninja Drift">
-      <h3>Ninja Drift</h3>
-      <p>Race through obstacle courses as a stealthy ninja, using your parkour and drifting skills to finish first!</p>
+    <!-- Game 3: The Never-Ending Email -->
+    <div class="game-card" onclick="window.location.href='never_ending_email.html'">
+      <img src="https://example.com/never_ending_email.jpg" alt="The Never-Ending Email">
+      <h3>The Never-Ending Email</h3>
+      <p>Help Charlene sort through her endless inbox while fighting off distractions, spam, and panic-induced procrastination! Reward: Game Time</p>
+      <p class="reward">Reward: Game Time</p>
     </div>
 
-    <div class="game-card" onclick="window.location.href='time_bender.html'">
-      <img src="https://via.placeholder.com/220x150/111/fff?text=Time+Bender" alt="Time Bender">
-      <h3>Time Bender</h3>
-      <p>Manipulate time itself to solve puzzles and escape dangerous situations in this thrilling adventure game.</p>
+    <!-- Game 4: Printer Rage -->
+    <div class="game-card" onclick="window.location.href='printer_rage.html'">
+      <img src="https://example.com/printer_rage.jpg" alt="Printer Rage">
+      <h3>Printer Rage</h3>
+      <p>Charlene's printer is malfunctioning again! Can you fix it before her deadline, or will you end up throwing it out the window? Reward: Sleep</p>
+      <p class="reward">Reward: Sleep</p>
     </div>
 
-    <div class="game-card" onclick="window.location.href='horror_mansion.html'">
-      <img src="https://via.placeholder.com/220x150/111/fff?text=Horror+Mansion" alt="Horror Mansion">
-      <h3>Horror Mansion</h3>
-      <p>Venture through an abandoned mansion filled with eerie creatures and supernatural phenomena. Solve the mysteries, if you dare.</p>
+    <!-- Game 5: The Meeting Marathon -->
+    <div class="game-card" onclick="window.location.href='meeting_marathon.html'">
+      <img src="https://example.com/meeting_marathon.jpg" alt="The Meeting Marathon">
+      <h3>The Meeting Marathon</h3>
+      <p>Help Charlene survive a never-ending series of Zoom meetings, all while battling technical issues and maintaining her sanity. Reward: A Pint of Beer</p>
+      <p class="reward">Reward: A Pint of Beer</p>
     </div>
 
-    <div class="game-card" onclick="window.location.href='vr_treasure_hunt.html'">
-      <img src="https://via.placeholder.com/220x150/111/fff?text=VR+Treasure+Hunt" alt="VR Treasure Hunt">
-      <h3>VR Treasure Hunt</h3>
-      <p>Put on your VR headset and go on an exciting treasure hunt across virtual worlds. Find hidden treasures and escape traps!</p>
+    <!-- Game 6: The Coffee Break Escape -->
+    <div class="game-card" onclick="window.location.href='coffee_break_escape.html'">
+      <img src="https://example.com/coffee_break_escape.jpg" alt="The Coffee Break Escape">
+      <h3>The Coffee Break Escape</h3>
+      <p>Charlene needs a break! Help her escape the office chaos for a coffee break while avoiding coworkers, email alerts, and deadlines! Reward: Buffalo Wings</p>
+      <p class="reward">Reward: Buffalo Wings</p>
+    </div>
+
+    <!-- Game 7: Creative Block Breakout -->
+    <div class="game-card" onclick="window.location.href='creative_block_breakout.html'">
+      <img src="https://example.com/creative_block_breakout.jpg" alt="Creative Block Breakout">
+      <h3>Creative Block Breakout</h3>
+      <p>Charlene is stuck with a creative block! Help her unlock her creativity by solving design puzzles and finding inspiration! Reward: Game Time</p>
+      <p class="reward">Reward: Game Time</p>
+    </div>
+
+    <!-- Game 8: Deadline Sprint -->
+    <div class="game-card" onclick="window.location.href='deadline_sprint.html'">
+      <img src="https://example.com/deadline_sprint.jpg" alt="Deadline Sprint">
+      <h3>Deadline Sprint</h3>
+      <p>Charlene is racing against the clock to finish a project. Can she meet the deadline without losing her mind? Reward: Sleep</p>
+      <p class="reward">Reward: Sleep</p>
     </div>
   </div>
 
   <button class="sign-out" onclick="signOutUser()">Sign Out</button>
 
   <footer>
-    <p>&copy; 2025 My Mandala Games. All Rights Reserved. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    <p>&copy; 2025 Charlene's Creative Chaos. All Rights Reserved.</p>
   </footer>
-
 </body>
 </html>
