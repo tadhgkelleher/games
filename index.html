@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Mandala - Firebase Authentication</title>
+  
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Import the necessary functions from Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
+
+    // Firebase configuration object
+    const firebaseConfig = {
+      apiKey: "AIzaSyA8nC973Wex5WJVgovi_MVzDtmuL4IOhjE",
+      authDomain: "mandala-5165e.firebaseapp.com",
+      projectId: "mandala-5165e",
+      storageBucket: "mandala-5165e.firebasestorage.app",
+      messagingSenderId: "569537405023",
+      appId: "1:569537405023:web:2665270500137a51e9bbea",
+      measurementId: "G-HCP0K8K0T1"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const analytics = getAnalytics(app);
+
+    // Regular Sign Up with Email & Password
+    document.getElementById('emailSignUpBtn').addEventListener('click', function() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const message = document.getElementById('message');
+      
+      message.textContent = 'Attempting to sign up with email...';
+      
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          message.style.color = 'green';
+          message.textContent = `Account created! Welcome ${user.email}`;
+          console.log(`User created: ${user.email}`);
+          window.location.href = 'games.html';  // Redirecting to games.html
+        })
+        .catch((error) => {
+          message.style.color = 'red';
+          message.textContent = `Error: ${error.message}`;
+          console.error('Error creating user:', error);
+        });
+    });
+
+    // Google Sign-Up
+    document.getElementById('googleSignUpBtn').addEventListener('click', function() {
+      const provider = new GoogleAuthProvider();
+      const message = document.getElementById('message');
+      
+      message.textContent = 'Attempting Google sign-up...';
+
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          console.log("User signed in:", user);
+          message.style.color = 'green';
+          message.textContent = `Google sign-in successful! Welcome ${user.displayName}`;
+          window.location.href = 'games.html';  // Redirecting to games.html
+        })
+        .catch((error) => {
+          console.error("Error during Google sign-in:", error.code);
+          console.error("Error message:", error.message);
+          
+          message.style.color = 'red';
+          message.textContent = `Error: ${error.message}`;
+        });
+    });
+  </script>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #000; /* Solid black base */
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Mandala background */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://storage.googleapis.com/pod_public/1300/123314.jpg') center/cover no-repeat;
+      opacity: 0.1; /* Make it semi-transparent */
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2; /* Above the background */
+      background: rgba(0, 0, 0, 0.8); /* Black with slight transparency */
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .container h2 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      color: white;
+    }
+
+    input, button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+    }
+
+    input {
+      background: #222;
+      color: white;
+      border: 1px solid #555;
+    }
+
+    button {
+      background: #007BFF;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .message {
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    /* Company branding */
+    .branding {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: #aaa;
+    }
+    .branding span {
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>My Mandala</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="emailSignUpBtn">Sign Up with Email</button>
+    <button id="googleSignUpBtn">Sign Up with Google</button>
+    <p id="message" class="message"></p>
+    <p class="branding">Powered by <span>My Mandala</span></p>
+  </div>
+</body>
+</html>
