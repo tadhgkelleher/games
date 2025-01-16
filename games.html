@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games Hub</title>
+  
+  <!-- Firebase SDKs (use the same Firebase setup as before) -->
+  <script type="module">
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    const auth = getAuth();
+
+    // Sign out function
+    function signOutUser() {
+      signOut(auth).then(() => {
+        window.location.href = 'index.html';  // Redirect to homepage after sign-out
+      }).catch((error) => {
+        console.error('Error during sign-out:', error.message);
+      });
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    header {
+      background-color: #222;
+      padding: 20px;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .game-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .game-card {
+      background-color: #333;
+      border-radius: 10px;
+      margin: 15px;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .game-card:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
+    }
+
+    .game-card img {
+      width: 100%;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .game-card h3 {
+      font-size: 1.5rem;
+      margin: 10px 0;
+    }
+
+    .game-card p {
+      font-size: 1rem;
+      padding: 0 10px;
+      color: #bbb;
+    }
+
+    .sign-out {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #ff6347;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .sign-out:hover {
+      background-color: #ff4500;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      background-color: #222;
+      padding: 10px;
+      color: #bbb;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Welcome to the Games Hub!
+  </header>
+
+  <div class="game-container">
+    <!-- Sample Game 1: Galactic Explorer -->
+    <div class="game-card" onclick="window.location.href='galactic_explorer.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Galactic Explorer">
+      <h3>Galactic Explorer</h3>
+      <p>Travel through different galaxies, discover new planets, and complete missions to collect rare items.</p>
+    </div>
+
+    <!-- Sample Game 2: Dream Builder -->
+    <div class="game-card" onclick="window.location.href='dream_builder.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Dream Builder">
+      <h3>Dream Builder</h3>
+      <p>Create your dream world by building structures, creating weather systems, and managing resources.</p>
+    </div>
+
+    <!-- Sample Game 3: Ninja Drift -->
+    <div class="game-card" onclick="window.location.href='ninja_drift.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Ninja Drift">
+      <h3>Ninja Drift</h3>
+      <p>Race through obstacle courses as a stealthy ninja, using your parkour and drifting skills to finish first!</p>
+    </div>
+
+    <!-- Sample Game 4: Time Bender -->
+    <div class="game-card" onclick="window.location.href='time_bender.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Time Bender">
+      <h3>Time Bender</h3>
+      <p>Manipulate time itself to solve puzzles and escape dangerous situations in this thrilling adventure game.</p>
+    </div>
+
+    <!-- Sample Game 5: Horror Mansion -->
+    <div class="game-card" onclick="window.location.href='horror_mansion.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Horror Mansion">
+      <h3>Horror Mansion</h3>
+      <p>Venture through an abandoned mansion filled with eerie creatures and supernatural phenomena. Solve the mysteries, if you dare.</p>
+    </div>
+
+    <!-- Sample Game 6: VR Treasure Hunt -->
+    <div class="game-card" onclick="window.location.href='vr_treasure_hunt.html'">
+      <img src="https://via.placeholder.com/200x150" alt="VR Treasure Hunt">
+      <h3>VR Treasure Hunt</h3>
+      <p>Put on your VR headset and go on an exciting treasure hunt across virtual worlds. Find hidden treasures and escape traps!</p>
+    </div>
+  </div>
+
+  <button class="sign-out" onclick="signOutUser()">Sign Out</button>
+
+  <footer>
+    <p>&copy; 2025 My Mandala Games. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>
