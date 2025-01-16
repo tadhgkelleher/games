@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Coffee Run Game</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(to top, #8b4513, #f4a261);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .charlene {
+      position: absolute;
+      bottom: 50px;
+      width: 50px;
+      height: 50px;
+      background-color: #ff6347;
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: left 0.1s;
+    }
+
+    .coffee-cup, .laptop, .spill, .barista {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-size: cover;
+      transition: top 0.1s;
+    }
+
+    .coffee-cup {
+      background-image: url('https://via.placeholder.com/30x30?text=☕');
+    }
+
+    .spill {
+      background-image: url('https://via.placeholder.com/30x30?text=💧');
+    }
+
+    .laptop {
+      background-image: url('https://via.placeholder.com/30x30?text=💻');
+    }
+
+    .barista {
+      background-image: url('https://via.placeholder.com/30x30?text=👨‍🍳');
+    }
+
+    .score-board {
+      position: absolute;
+      top: 20px;
+      font-size: 20px;
+      color: white;
+      z-index: 10;
+      padding: 5px 10px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+    }
+
+    .reward {
+      position: absolute;
+      top: 80%;
+      font-size: 24px;
+      color: #ff5722;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="game-container">
+  <div class="score-board">
+    <span id="score">Score: 0</span>
+  </div>
+  <div class="charlene" id="charlene"></div>
+  <div class="reward" id="reward">Congratulations! You earned Buffalo Wings!</div>
+
+  <div class="coffee-cup" style="top: -50px; left: 100px;"></div>
+  <div class="coffee-cup" style="top: -200px; left: 250px;"></div>
+  <div class="laptop" style="top: -300px; left: 400px;"></div>
+  <div class="spill" style="top: -500px; left: 150px;"></div>
+  <div class="barista" style="top: -700px; left: 50px;"></div>
+</div>
+
+<script>
+  let score = 0;
+  let charlene = document.getElementById('charlene');
+  let scoreBoard = document.getElementById('score');
+  let reward = document.getElementById('reward');
+  let gameContainer = document.querySelector('.game-container');
+
+  let gameElements = [
+    { element: document.querySelector('.coffee-cup:nth-of-type(1)'), speed: 2 },
+    { element: document.querySelector('.coffee-cup:nth-of-type(2)'), speed: 3 },
+    { element: document.querySelector('.laptop'), speed: 4 },
+    { element: document.querySelector('.spill'), speed: 1 },
+    { element: document.querySelector('.barista'), speed: 1.5 }
+  ];
+
+  // Control Charlene's movement
+  let leftPosition = 50;
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft' && leftPosition > 0) {
+      leftPosition -= 10;
+      charlene.style.left = `${leftPosition}%`;
+    } else if (event.key === 'ArrowRight' && leftPosition < 90) {
+      leftPosition += 10;
+      charlene.style.left = `${leftPosition}%`;
+    }
+  });
+
+  // Game loop
+  function gameLoop() {
+    gameElements.forEach(item => {
+      let currentTop = parseInt(item.element.style.top) || 0;
+      item.element.style.top = `${currentTop + item.speed}px`;
+
+      // Reset the elements once they go off-screen
+      if (currentTop > window.innerHeight) {
+        item.element.style.top = `-${Math.floor(Math.random() * 500)}px`;
+        item.element.style.left = `${Math.floor(Math.random() * 100)}%`;
+        
+        // Increase score for coffee cups
+        if (item.element.classList.contains('coffee-cup')) {
+          score += 10;
+          scoreBoard.innerText = `Score: ${score}`;
+        }
+      }
+
+      // Collision detection
+      if (currentTop + 30 > window.innerHeight - 50 &&
+        leftPosition * (window.innerWidth / 100) + 25 > parseInt(item.element.style.left) &&
+        leftPosition * (window.innerWidth / 100) - 25 < parseInt(item.element.style.left) + 30) {
+        if (item.element.classList.contains('coffee-cup')) {
+          score += 10;
+          scoreBoard.innerText = `Score: ${score}`;
+        } else {
+          gameOver();
+        }
+      }
+    });
+
+    // Check if player reached the goal
+    if (score >= 100) {
+      reward.style.display = 'block';
+    }
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  // Game Over function
+  function gameOver() {
+    alert("Game Over! You didn't survive the coffee run!");
+    location.reload(); // Restart the game
+  }
+
+  // Start the game
+  gameLoop();
+
+</script>
+
+</body>
+</html>
