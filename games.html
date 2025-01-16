@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Games Hub</title>
   
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs (use the same Firebase setup as before) -->
   <script type="module">
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     const auth = getAuth();
 
     // Sign out function
-    window.signOutUser = function() {
+    function signOutUser() {
       signOut(auth).then(() => {
         window.location.href = 'index.html';  // Redirect to homepage after sign-out
       }).catch((error) => {
@@ -20,152 +20,142 @@
     }
   </script>
 
-  <!-- React and ReactDOM -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
 
-  <!-- Lucide Icons -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    header {
+      background-color: #222;
+      padding: 20px;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .game-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .game-card {
+      background-color: #333;
+      border-radius: 10px;
+      margin: 15px;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .game-card:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
+    }
+
+    .game-card img {
+      width: 100%;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .game-card h3 {
+      font-size: 1.5rem;
+      margin: 10px 0;
+    }
+
+    .game-card p {
+      font-size: 1rem;
+      padding: 0 10px;
+      color: #bbb;
+    }
+
+    .sign-out {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #ff6347;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .sign-out:hover {
+      background-color: #ff4500;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      background-color: #222;
+      padding: 10px;
+      color: #bbb;
+    }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
+  <header>
+    Welcome to the Games Hub!
+  </header>
 
-  <script type="module">
-    const { useState } = React;
-    const { Home, Clock, Compass, Ghost } = window.lucide;
+  <div class="game-container">
+    <!-- Sample Game 1: Galactic Explorer -->
+    <div class="game-card" onclick="window.location.href='galactic_explorer.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Galactic Explorer">
+      <h3>Galactic Explorer</h3>
+      <p>Travel through different galaxies, discover new planets, and complete missions to collect rare items.</p>
+    </div>
 
-    // Custom SVG components for missing icons
-    const PlanetIcon = () => {
-      return React.createElement('svg', {
-        viewBox: "0 0 24 24",
-        className: "w-24 h-24 text-purple-400",
-        fill: "none",
-        stroke: "currentColor",
-        strokeWidth: "2"
-      }, [
-        React.createElement('circle', { cx: "12", cy: "12", r: "8", key: "circle" }),
-        React.createElement('ellipse', { cx: "12", cy: "12", rx: "11", ry: "4", key: "ellipse1" }),
-        React.createElement('ellipse', {
-          cx: "12",
-          cy: "12",
-          rx: "11",
-          ry: "4",
-          transform: "rotate(90 12 12)",
-          key: "ellipse2"
-        })
-      ]);
-    };
+    <!-- Sample Game 2: Dream Builder -->
+    <div class="game-card" onclick="window.location.href='dream_builder.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Dream Builder">
+      <h3>Dream Builder</h3>
+      <p>Create your dream world by building structures, creating weather systems, and managing resources.</p>
+    </div>
 
-    const NinjaIcon = () => {
-      return React.createElement('svg', {
-        viewBox: "0 0 24 24",
-        className: "w-24 h-24 text-green-400",
-        fill: "none",
-        stroke: "currentColor",
-        strokeWidth: "2"
-      }, [
-        React.createElement('path', {
-          d: "M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z",
-          key: "path1"
-        }),
-        React.createElement('path', {
-          d: "M8 14C8.91221 15.2144 10.3645 16 12 16C13.6355 16 15.0878 15.2144 16 14",
-          key: "path2"
-        }),
-        React.createElement('path', { d: "M9 9H9.01", key: "path3" }),
-        React.createElement('path', { d: "M15 9H15.01", key: "path4" })
-      ]);
-    };
+    <!-- Sample Game 3: Ninja Drift -->
+    <div class="game-card" onclick="window.location.href='ninja_drift.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Ninja Drift">
+      <h3>Ninja Drift</h3>
+      <p>Race through obstacle courses as a stealthy ninja, using your parkour and drifting skills to finish first!</p>
+    </div>
 
-    const GamesHub = () => {
-      const games = [
-        {
-          title: "Galactic Explorer",
-          path: "galactic_explorer.html",
-          description: "Travel through different galaxies, discover new planets, and complete missions to collect rare items.",
-          icon: PlanetIcon
-        },
-        {
-          title: "Dream Builder",
-          path: "dream_builder.html",
-          description: "Create your dream world by building structures, creating weather systems, and managing resources.",
-          icon: () => React.createElement(Home, { className: "w-24 h-24 text-blue-400" })
-        },
-        {
-          title: "Ninja Drift",
-          path: "ninja_drift.html",
-          description: "Race through obstacle courses as a stealthy ninja, using your parkour and drifting skills to finish first!",
-          icon: NinjaIcon
-        },
-        {
-          title: "Time Bender",
-          path: "time_bender.html",
-          description: "Manipulate time itself to solve puzzles and escape dangerous situations in this thrilling adventure game.",
-          icon: () => React.createElement(Clock, { className: "w-24 h-24 text-yellow-400" })
-        },
-        {
-          title: "Horror Mansion",
-          path: "horror_mansion.html",
-          description: "Venture through an abandoned mansion filled with eerie creatures and supernatural phenomena. Solve the mysteries, if you dare.",
-          icon: () => React.createElement(Ghost, { className: "w-24 h-24 text-red-400" })
-        },
-        {
-          title: "VR Treasure Hunt",
-          path: "vr_treasure_hunt.html",
-          description: "Put on your VR headset and go on an exciting treasure hunt across virtual worlds. Find hidden treasures and escape traps!",
-          icon: () => React.createElement(Compass, { className: "w-24 h-24 text-orange-400" })
-        }
-      ];
+    <!-- Sample Game 4: Time Bender -->
+    <div class="game-card" onclick="window.location.href='time_bender.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Time Bender">
+      <h3>Time Bender</h3>
+      <p>Manipulate time itself to solve puzzles and escape dangerous situations in this thrilling adventure game.</p>
+    </div>
 
-      return React.createElement('div', { className: "min-h-screen bg-gray-900" }, [
-        React.createElement('header', { className: "bg-gray-800 p-6 text-center relative", key: "header" }, [
-          React.createElement('h1', { className: "text-4xl font-bold text-white", key: "title" }, "Welcome to the Games Hub!"),
-          React.createElement('button', {
-            onClick: () => window.signOutUser(),
-            className: "absolute right-6 top-1/2 -translate-y-1/2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors",
-            key: "signout"
-          }, "Sign Out")
-        ]),
+    <!-- Sample Game 5: Horror Mansion -->
+    <div class="game-card" onclick="window.location.href='horror_mansion.html'">
+      <img src="https://via.placeholder.com/200x150" alt="Horror Mansion">
+      <h3>Horror Mansion</h3>
+      <p>Venture through an abandoned mansion filled with eerie creatures and supernatural phenomena. Solve the mysteries, if you dare.</p>
+    </div>
 
-        React.createElement('main', { className: "container mx-auto px-4 py-8", key: "main" },
-          React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" },
-            games.map(game =>
-              React.createElement('a', {
-                key: game.title,
-                href: game.path,
-                className: "block group"
-              },
-                React.createElement('div', { className: "bg-gray-800 rounded-xl p-6 transition-transform transform hover:scale-105 hover:shadow-xl" }, [
-                  React.createElement('div', {
-                    className: "flex justify-center items-center h-48 mb-4 bg-gray-700 rounded-lg",
-                    key: "icon-container"
-                  }, React.createElement(game.icon)),
-                  React.createElement('h3', {
-                    className: "text-xl font-bold text-white mb-2",
-                    key: "game-title"
-                  }, game.title),
-                  React.createElement('p', {
-                    className: "text-gray-400",
-                    key: "game-description"
-                  }, game.description)
-                ])
-              )
-            )
-          )
-        ),
+    <!-- Sample Game 6: VR Treasure Hunt -->
+    <div class="game-card" onclick="window.location.href='vr_treasure_hunt.html'">
+      <img src="https://via.placeholder.com/200x150" alt="VR Treasure Hunt">
+      <h3>VR Treasure Hunt</h3>
+      <p>Put on your VR headset and go on an exciting treasure hunt across virtual worlds. Find hidden treasures and escape traps!</p>
+    </div>
+  </div>
 
-        React.createElement('footer', { className: "bg-gray-800 text-gray-400 text-center p-4 mt-8", key: "footer" },
-          React.createElement('p', {}, "© 2025 My Mandala Games. All Rights Reserved.")
-        )
-      ]);
-    };
+  <button class="sign-out" onclick="signOutUser()">Sign Out</button>
 
-    // Render the app
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(React.createElement(GamesHub));
-  </script>
+  <footer>
+    <p>&copy; 2025 My Mandala Games. All Rights Reserved.</p>
+  </footer>
+
 </body>
 </html>
