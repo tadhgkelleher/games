@@ -80,7 +80,6 @@
       border-radius: 10px;
       display: none;
     }
-
   </style>
 </head>
 <body>
@@ -115,12 +114,14 @@
   ];
 
   let leftPosition = 50;
+  let moveAmount = 10;
+
   document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft' && leftPosition > 0) {
-      leftPosition -= 10;
+      leftPosition -= moveAmount;
       charlene.style.left = `${leftPosition}%`;
     } else if (event.key === 'ArrowRight' && leftPosition < 90) {
-      leftPosition += 10;
+      leftPosition += moveAmount;
       charlene.style.left = `${leftPosition}%`;
     }
   });
@@ -135,6 +136,7 @@
         item.element.style.top = `-${Math.floor(Math.random() * 500)}px`;
         item.element.style.left = `${Math.floor(Math.random() * 100)}%`;
 
+        // If it's a coffee cup, increase score
         if (item.type === 'coffee') {
           score += 10;
           scoreBoard.innerText = `Score: ${score}`;
