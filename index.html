@@ -7,23 +7,20 @@
   
   <!-- Firebase SDKs -->
   <script type="module">
-    // Import the necessary functions from Firebase SDK
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 
-    // Firebase configuration object
     const firebaseConfig = {
-      apiKey: "AIzaSyA8nC973Wex5WJVgovi_MVzDtmuL4IOhjE",
-      authDomain: "mandala-5165e.firebaseapp.com",
-      projectId: "mandala-5165e",
-      storageBucket: "mandala-5165e.firebasestorage.app",
-      messagingSenderId: "569537405023",
-      appId: "1:569537405023:web:2665270500137a51e9bbea",
-      measurementId: "G-HCP0K8K0T1"
+      apiKey: "AIzaSyCJfH4OCIQ9h885Xr3hkqe5UDcdtTcWb8s",
+      authDomain: "games-e41c6.firebaseapp.com",
+      projectId: "games-e41c6",
+      storageBucket: "games-e41c6.firebasestorage.app",
+      messagingSenderId: "703286568199",
+      appId: "1:703286568199:web:11cd237dc1fbaf6e0091a2",
+      measurementId: "G-FG1Z850H6L"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const analytics = getAnalytics(app);
@@ -42,7 +39,7 @@
           message.style.color = 'green';
           message.textContent = `Account created! Welcome ${user.email}`;
           console.log(`User created: ${user.email}`);
-          window.location.href = 'games.html';  // Redirecting to games.html
+          window.location.href = 'games.html';  // Redirect to games.html after successful sign-up
         })
         .catch((error) => {
           message.style.color = 'red';
@@ -64,7 +61,7 @@
           console.log("User signed in:", user);
           message.style.color = 'green';
           message.textContent = `Google sign-in successful! Welcome ${user.displayName}`;
-          window.location.href = 'games.html';  // Redirecting to games.html
+          window.location.href = 'games.html';  // Redirect to games.html after successful sign-in
         })
         .catch((error) => {
           console.error("Error during Google sign-in:", error.code);
