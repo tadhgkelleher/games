@@ -32,7 +32,7 @@
       border-radius: 50%;
       left: 50%;
       transform: translateX(-50%);
-      transition: left 0.1s;
+      transition: left 0.1s ease;
     }
 
     .coffee-cup, .laptop, .spill, .barista {
@@ -40,7 +40,7 @@
       width: 30px;
       height: 30px;
       background-size: cover;
-      transition: top 0.1s;
+      transition: top 0.1s ease;
     }
 
     .coffee-cup {
@@ -155,8 +155,8 @@
       }
     });
 
-    if (score >= 100) {
-      reward.style.display = 'block';
+    if (score >= 100 && !reward.style.display) {
+      reward.style.display = 'block'; // Show reward when score reaches 100
     }
 
     requestAnimationFrame(gameLoop);
