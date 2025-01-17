@@ -1,1 +1,185 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printer Rage: Charlene's Design Escape</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        #game-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background-color: #ffffff;
+            border: 2px solid #000;
+        }
+
+        #charlene {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 100px;
+            background-color: #ff69b4; /* Charlene's avatar */
+            border-radius: 10px;
+        }
+
+        .printer {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background-color: #000;
+            border-radius: 10px;
+        }
+
+        #anger-meter {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 20px;
+            color: red;
+        }
+
+        .ink-splatter {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.3);
+            animation: splatterAnimation 1s infinite;
+        }
+
+        @keyframes splatterAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        #escape-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            color: black;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="charlene"></div>
+    <div class="printer" id="printer"></div>
+    <div id="anger-meter">Anger Meter: 0%</div>
+    <div id="escape-message">Charlene Escaped! Game Over!</div>
+</div>
+
+<script>
+    const charlene = document.getElementById('charlene');
+    const printer = document.getElementById('printer');
+    const angerMeter = document.getElementById('anger-meter');
+    const escapeMessage = document.getElementById('escape-message');
+
+    let angerLevel = 0;
+    let gameOver = false;
+
+    // Controls
+    document.addEventListener('keydown', moveCharlene);
+
+    function moveCharlene(e) {
+        if (gameOver) return;
+
+        const charlenePos = charlene.getBoundingClientRect();
+
+        if (e.key === 'ArrowLeft' && charlenePos.left > 0) {
+            charlene.style.left = `${charlenePos.left - 10}px`;
+        }
+        if (e.key === 'ArrowRight' && charlenePos.right < window.innerWidth) {
+            charlene.style.left = `${charlenePos.left + 10}px`;
+        }
+    }
+
+    // Printer malfunction and ink splatter
+    setInterval(() => {
+        if (gameOver) return;
+
+        // Random ink splatter
+        const ink = document.createElement('div');
+        ink.classList.add('ink-splatter');
+        ink.style.top = `${Math.random() * window.innerHeight}px`;
+        ink.style.left = `${Math.random() * window.innerWidth}px`;
+        document.getElementById('game-container').appendChild(ink);
+
+        // Increase anger level
+        angerLevel += Math.random() * 10;
+        angerMeter.innerText = `Anger Meter: ${Math.min(angerLevel, 100).toFixed(0)}%`;
+
+        // Game over when anger hits 100%
+        if (angerLevel >= 100) {
+            gameOver = true;
+            escapeMessage.style.display = 'block';
+            escapeMessage.innerText = "Charlene Can't Escape! Printer Rage Overloaded!";
+        }
+    }, 1000);
+
+    // Printer malfunction sound
+    const printerSound = new Audio('printer-malfunction.mp3');
+    setInterval(() => {
+        if (!gameOver && Math.random() < 0.05) {
+            printerSound.play();
+        }
+    }, 2000);
+
+    // Game logic: Escape challenge
+    setInterval(() => {
+        if (gameOver) return;
+
+        const charlenePos = charlene.getBoundingClientRect();
+        const printerPos = printer.getBoundingClientRect();
+
+        if (
+            charlenePos.bottom < printerPos.top || 
+            charlenePos.top > printerPos.bottom || 
+            charlenePos.right < printerPos.left || 
+            charlenePos.left > printerPos.right
+        ) {
+            // Charlene is safe from printer collision
+            return;
+        }
+
+        angerLevel += 5; // Printer is malfunctioning, anger level increases
+        angerMeter.innerText = `Anger Meter: ${Math.min(angerLevel, 100).toFixed(0)}%`;
+    }, 100);
+
+    // Escape condition (e.g., Charlene moves to the top of the screen)
+    setInterval(() => {
+        if (gameOver) return;
+
+        const charlenePos = charlene.getBoundingClientRect();
+
+        if (charlenePos.top <= 0) {
+            gameOver = true;
+            escapeMessage.style.display = 'block';
+            escapeMessage.innerText = "Charlene Escaped! Game Over!";
+        }
+    }, 100);
+
+</script>
+
+</body>
+</html>
