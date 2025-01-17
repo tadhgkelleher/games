@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @keyframes panic {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5px, -5px) rotate(-5deg); }
+            75% { transform: translate(5px, 5px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 800px;
+            height: 600px;
+            background: #16213e;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .inbox {
+            width: 100%;
+            height: 70%;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .email {
+            background: #0f3460;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .email:hover {
+            transform: scale(1.02);
+            background: #1a4b8c;
+        }
+
+        .email.spam { background: #4a1942; }
+        .email.urgent { background: #6a040f; }
+        .email.casual { background: #2d6a4f; }
+
+        .stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #1f4068;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .distraction {
+            position: absolute;
+            padding: 10px;
+            background: #e94560;
+            border-radius: 50%;
+            cursor: pointer;
+            animation: float 2s infinite;
+            z-index: 100;
+        }
+
+        .panic-meter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 20px;
+            background: #0f3460;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .panic-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2d6a4f 0%, #e94560 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .actions {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .button:hover {
+            transform: scale(1.1);
+        }
+
+        .delete { background: #e94560; color: white; }
+        .archive { background: #2d6a4f; color: white; }
+        .reply { background: #1f4068; color: white; }
+
+        .coffee-break {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #6a040f;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .paused {
+            animation: panic 0.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <div class="stats">
+            Emails Handled: <span id="score">0</span><br>
+            Time: <span id="time">2:00</span><br>
+            Procrastination Level: <span id="procrastination">0%</span>
+        </div>
+
+        <div class="inbox" id="inbox">
+            <!-- Emails will be generated here -->
+        </div>
+
+        <div class="actions">
+            <button class="button delete" onclick="handleEmail('delete')">Delete</button>
+            <button class="button archive" onclick="handleEmail('archive')">Archive</button>
+            <button class="button reply" onclick="handleEmail('reply')">Reply</button>
+        </div>
+
+        <div class="panic-meter">
+            <div class="panic-fill" id="panicMeter"></div>
+        </div>
+
+        <button class="coffee-break" onclick="takeCoffeeBreak()">☕ Coffee Break!</button>
+    </div>
+
+    <script>
+        const emailTemplates = [
+            { type: 'spam', subjects: [
+                "YOU WON'T BELIEVE WHAT HAPPENED NEXT!!!",
+                "Your Long-Lost Uncle Left You Millions!",
+                "Hot Singles In Your IDE Want To Code With You",
+                "Enlarge Your Programming Skills NOW!"
+            ]},
+            { type: 'urgent', subjects: [
+                "ASAP: Website Is On Fire! 🔥",
+                "Client Meeting in -2 Minutes!",
+                "Help! All The Databases Are Dancing!",
+                "CEO Needs Comic Sans Everywhere!"
+            ]},
+            { type: 'casual', subjects: [
+                "Quick Question That Will Take 5 Hours",
+                "Re: Re: Re: Re: Meeting About Meetings",
+                "Can You Just Make One Tiny Change?",
+                "FWD: FWD: FWD: Cute Cat GIFs"
+            ]}
+        ];
+
+        const distractions = [
+            "🐱 Cat Video!",
+            "☕ Coffee Time!",
+            "🎮 New Game!",
+            "📱 Social Media!"
+        ];
+
+        let score = 0;
+        let timeLeft = 120;
+        let panicLevel = 0;
+        let procrastinationLevel = 0;
+        let selectedEmail = null;
+        let gameTimer;
+        let isPaused = false;
+
+        function initGame() {
+            generateEmails(5);
+            startTimer();
+            spawnDistractions();
+        }
+
+        function generateEmails(count) {
+            const inbox = document.getElementById('inbox');
+            for (let i = 0; i < count; i++) {
+                const template = emailTemplates[Math.floor(Math.random() * emailTemplates.length)];
+                const subject = template.subjects[Math.floor(Math.random() * template.subjects.length)];
+                
+                const email = document.createElement('div');
+                email.className = `email ${template.type}`;
+                email.innerHTML = `
+                    <div>${subject}</div>
+                    <div>From: ${generateSillyEmail()}</div>
+                `;
+                email.onclick = () => selectEmail(email);
+                inbox.appendChild(email);
+            }
+        }
+
+        function generateSillyEmail() {
+            const names = ['ChaosCode', 'BugMaster', 'CoffeeGuru', 'PixelNinja', 'ZombieServer'];
+            const domains = ['@panic.com', '@chaos.net', '@coffee.dev', '@debugme.now'];
+            return names[Math.floor(Math.random() * names.length)] + 
+                   domains[Math.floor(Math.random() * domains.length)];
+        }
+
+        function selectEmail(email) {
+            if (selectedEmail) selectedEmail.style.transform = 'scale(1)';
+            selectedEmail = email;
+            email.style.transform = 'scale(1.05)';
+        }
+
+        function handleEmail(action) {
+            if (!selectedEmail || isPaused) return;
+
+            const isCorrectAction = Math.random() > 0.3; // 70% chance of correct action
+            if (isCorrectAction) {
+                score += 10;
+                panicLevel = Math.max(0, panicLevel - 5);
+            } else {
+                panicLevel = Math.min(100, panicLevel + 15);
+                shakeScreen();
+            }
+
+            selectedEmail.style.animation = 'float 0.5s';
+            setTimeout(() => selectedEmail.remove(), 500);
+            selectedEmail = null;
+            
+            updateStats();
+            generateEmails(1);
+        }
+
+        function spawnDistractions() {
+            setInterval(() => {
+                if (isPaused) return;
+                
+                const distraction = document.createElement('div');
+                distraction.className = 'distraction';
+                distraction.textContent = distractions[Math.floor(Math.random() * distractions.length)];
+                distraction.style.left = Math.random() * 700 + 'px';
+                distraction.style.top = Math.random() * 500 + 'px';
+                
+                distraction.onclick = () => {
+                    procrastinationLevel += 10;
+                    panicLevel += 5;
+                    distraction.remove();
+                    updateStats();
+                };
+
+                document.getElementById('gameContainer').appendChild(distraction);
+                setTimeout(() => distraction.remove(), 3000);
+            }, 4000);
+        }
+
+        function shakeScreen() {
+            document.getElementById('gameContainer').classList.add('paused');
+            setTimeout(() => {
+                document.getElementById('gameContainer').classList.remove('paused');
+            }, 500);
+        }
+
+        function takeCoffeeBreak() {
+            isPaused = !isPaused;
+            const container = document.getElementById('gameContainer');
+            if (isPaused) {
+                container.style.filter = 'sepia(1)';
+                panicLevel = Math.max(0, panicLevel - 20);
+            } else {
+                container.style.filter = 'none';
+            }
+            updateStats();
+        }
+
+        function startTimer() {
+            gameTimer = setInterval(() => {
+                if (isPaused) return;
+                
+                timeLeft--;
+                panicLevel = Math.min(100, panicLevel + 0.5);
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                    return;
+                }
+                
+                updateStats();
+            }, 1000);
+        }
+
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('time').textContent = `${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2, '0')}`;
+            document.getElementById('procrastination').textContent = `${procrastinationLevel}%`;
+            document.getElementById('panicMeter').style.width = `${panicLevel}%`;
+        }
+
+        function endGame() {
+            clearInterval(gameTimer);
+            alert(`Game Over!\nEmails Handled: ${score}\nProcrastination Level: ${procrastinationLevel}%\nFinal Panic Level: ${panicLevel}%\n\nReward: ${score > 100 ? 'Extended Game Time! 🎮' : 'Try again for more game time!'}`);
+            location.reload();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
