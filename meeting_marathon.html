@@ -1,1 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Marathon</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
+        .game-container {
+            background: #2a2a2a;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .stat-box {
+            background: #333;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .game-screen {
+            background: #333;
+            height: 300px;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: #4CAF50;
+            border-radius: 50%;
+        }
+
+        .issue {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff4444;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) translateX(-50%); }
+            50% { transform: translateY(-10px) translateX(-50%); }
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .beer-meter {
+            background: #333;
+            height: 20px;
+            border-radius: 10px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .beer-progress {
+            height: 100%;
+            background: #ffd700;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            padding: 2rem;
+            border-radius: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Meeting Marathon</h1>
+        <div class="stats-container">
+            <div class="stat-box">
+                <h3>Sanity</h3>
+                <p id="sanity">100%</p>
+            </div>
+            <div class="stat-box">
+                <h3>Meetings</h3>
+                <p id="meetings">0</p>
+            </div>
+            <div class="stat-box">
+                <h3>Time</h3>
+                <p id="time">0:00</p>
+            </div>
+        </div>
+        <div class="beer-meter">
+            <div class="beer-progress"></div>
+        </div>
+        <div class="game-screen">
+            <div class="character"></div>
+            <div class="issue" style="display: none;"></div>
+            <div class="game-over">
+                <h2>Game Over!</h2>
+                <p>You survived <span id="final-meetings">0</span> meetings!</p>
+                <button onclick="startGame()">Try Again</button>
+            </div>
+        </div>
+        <div class="controls">
+            <button onclick="handleIssue('coffee')">Drink Coffee (+10 Sanity)</button>
+            <button onclick="handleIssue('fix')">Fix Technical Issue</button>
+        </div>
+    </div>
+
+    <script>
+        let gameStarted = false;
+        let sanity = 100;
+        let meetings = 0;
+        let time = 0;
+        let gameInterval;
+        let currentIssue = null;
+
+        const issues = [
+            "WiFi dropping!",
+            "Mic not working!",
+            "Camera frozen!",
+            "Battery low!"
+        ];
+
+        function startGame() {
+            gameStarted = true;
+            sanity = 100;
+            meetings = 0;
+            time = 0;
+            updateDisplay();
+            document.querySelector(".game-over").style.display = "none";
+            
+            gameInterval = setInterval(() => {
+                time++;
+                sanity = Math.max(0, sanity - 0.5);
+                
+                if (Math.random() < 0.1 && !currentIssue) {
+                    createNewIssue();
+                }
+                
+                if (Math.random() < 0.05) {
+                    meetings++;
+                }
+                
+                updateDisplay();
+                
+                if (sanity <= 0) {
+                    gameOver();
+                }
+            }, 1000);
+        }
+
+        function createNewIssue() {
+            currentIssue = issues[Math.floor(Math.random() * issues.length)];
+            const issueElement = document.querySelector(".issue");
+            issueElement.textContent = currentIssue;
+            issueElement.style.display = "block";
+        }
+
+        function handleIssue(action) {
+            if (!gameStarted) return;
+            
+            if (action === "coffee") {
+                sanity = Math.min(100, sanity + 10);
+            } else if (action === "fix" && currentIssue) {
+                currentIssue = null;
+                document.querySelector(".issue").style.display = "none";
+                meetings++;
+            }
+            
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById("sanity").textContent = Math.round(sanity) + "%";
+            document.getElementById("meetings").textContent = meetings;
+            document.getElementById("time").textContent = formatTime(time);
+            document.querySelector(".beer-progress").style.width = meetings + "%";
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return minutes + ":" + remainingSeconds.toString().padStart(2, "0");
+        }
+
+        function gameOver() {
+            gameStarted = false;
+            clearInterval(gameInterval);
+            document.getElementById("final-meetings").textContent = meetings;
+            document.querySelector(".game-over").style.display = "block";
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
